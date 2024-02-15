@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage">
+        <img src="image.png" alt="Image 1">
+        <img src="another_image.png" alt="Another Image"> <!-- Add another image here -->
+    </div>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li class="dropdown">
+                    <a href="#">Login</a>
+                    <ul class="dropdown-content">
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div id="studentLoginForm" class="login-form">
+        <h2>Student Login</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Get the entered username and password
+            let username = document.getElementById("username").value.trim();
+            let password = document.getElementById("password").value.trim();
+
+            // Retrieve student credentials from local storage
+            let students = JSON.parse(localStorage.getItem("students")) || [];
+
+            // Check if the entered credentials match any student's credentials
+            let matchedStudent = students.find(student => student.username === username && student.password === password);
+
+            if (matchedStudent) {
+                // Redirect to the student dashboard page
+                window.location.href = "student-dashboard.html";
+            } else {
+                // Display an error message
+                alert("Invalid username or password. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

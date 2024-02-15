@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage">
+        <img src="image.png" alt="Image 1">
+        <img src="another_image.png" alt="Another Image"> <!-- Add another image here -->
+    </div>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li class="dropdown">
+                    <a href="#">Login</a>
+                    <ul class="dropdown-content">
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Services</a>
+                    <ul class="dropdown-content">
+                        <li><a href="add student.html">Add Student</a></li>
+                        <li><a href="add-project.html">Add Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Student Details Form -->
+    <div id="addStudentForm" style="display: none;">
+        <h2>Add Student</h2>
+        <form id="studentForm">
+            <label for="studentName">Student Name:</label>
+            <input type="text" id="studentName" name="studentName"><br>
+            <label for="studentId">Student ID:</label>
+            <input type="text" id="studentId" name="studentId"><br>
+            <label for="studentPassword">Password:</label>
+            <input type="password" id="studentPassword" name="studentPassword"><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

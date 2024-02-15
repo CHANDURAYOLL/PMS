@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage">
+        <img src="image.png" alt="Image 1">
+        <img src="another_image.png" alt="Another Image"> <!-- Add another image here -->
+    </div>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li class="dropdown">
+                    <a href="#">Login</a>
+                    <ul class="dropdown-content">
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Services</a>
+                    <ul class="dropdown-content">
+                        <li><a href="add-student.html">Add Student</a></li>
+                        <li><a href="add-project.html">Add Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+     <div class="admin-content">
+        <h1>Admin Dashboard</h1>
+        <table id="ideasTable">
+            <thead>
+                <tr>
+                    <th>Idea</th>
+                    <th>Email</th>
+                    <th>Action</th> <!-- Add a new column for delete button -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Student ideas will be listed here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        window.onload = function() {
+            let studentIdeas = JSON.parse(localStorage.getItem('studentIdeas')) || [];
+            let ideasTable = document.getElementById('ideasTable').getElementsByTagName('tbody')[0];
+            studentIdeas.forEach(function(idea, index) {
+                addIdeaToTable(idea, index, ideasTable);
+            });
+        };
+
+        function addIdeaToTable(idea, index, table) {
+            let row = table.insertRow();
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2); // Add a new cell for delete button
+            
+            cell1.textContent = idea.idea;
+            cell2.textContent = idea.email;
+
+            let deleteButton = document.createElement('button'); // Create delete button
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = function() {
+                deleteIdea(row, index);
+            };
+            cell3.appendChild(deleteButton);
+        }
+
+        function deleteIdea(row, index) {
+            if (confirm('Are you sure you want to delete this idea?')) {
+                row.parentNode.removeChild(row);
+                let studentIdeas = JSON.parse(localStorage.getItem('studentIdeas')) || [];
+                studentIdeas.splice(index, 1); // Remove the idea from the array
+                localStorage.setItem('studentIdeas', JSON.stringify(studentIdeas)); // Update localStorage
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage">
+        <img src="image.png" alt="Image 1">
+        <img src="another_image.png" alt="Another Image"> <!-- Add another image here -->
+    </div>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li class="dropdown">
+                    <a href="#">Login</a>
+                    <ul class="dropdown-content">
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Services</a>
+                    <ul class="dropdown-content">
+                        <li><a href="add-student.html">Add Student</a></li>
+                        <li><a href="add-project.html">Add Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="admin-content">
+        <h1>Administrative Page</h1>
+        <div id="formContainer">
+            <h2>Enter File Details</h2>
+            <form id="fileDetailsForm">
+                <label for="serialNumber">Serial Number:</label>
+                <input type="text" id="serialNumber" name="serialNumber"><br>
+                <label for="studentName">Student Name:</label>
+                <input type="text" id="studentName" name="studentName"><br>
+                <label for="batchId">Batch ID:</label>
+                <input type="text" id="batchId" name="batchId"><br>
+                <label for="guide">Guide:</label>
+                <input type="text" id="guide" name="guide"><br>
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title"><br>
+                <label for="fileInput">Choose File:</label>
+                <input type="file" id="fileInput" accept=".pdf" multiple> <br> <!-- Allow selecting multiple files -->
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+        <hr>
+        <table id="fileTable">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Serial Number</th>
+                    <th>Student Name</th>
+                    <th>Batch ID</th>
+                    <th>Guide</th>
+                    <th>Title</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Uploaded files will be listed here dynamically -->
+            </tbody>
+        </table>
+    </div>
+    
+
+    <script type="text/javascript">
+        window.onload = function() {
+            let uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
+            let fileTable = document.getElementById('fileTable').getElementsByTagName('tbody')[0];
+            uploadedFiles.forEach(function(file) {
+                addFileToTable(file, fileTable);
+            });
+
+            document.getElementById('fileDetailsForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                let serialNumber = document.getElementById('serialNumber').value.trim();
+                let studentName = document.getElementById('studentName').value.trim();
+                let batchId = document.getElementById('batchId').value.trim();
+                let guide = document.getElementById('guide').value.trim();
+                let title = document.getElementById('title').value.trim();
+                let fileInput = document.getElementById('fileInput');
+                let files = fileInput.files;
+                // Get an array of selected files
+
+                // Check if all input fields are filled in
+                if (serialNumber !== '' && studentName !== '' && batchId !== '' && guide !== '' && title !== '') {
+                    // Loop through each selected file
+                    for (let i = 0; i < files.length; i++) {
+                        let file = files[i];
+
+                        let reader = new FileReader();
+                        reader.onload = function(e) {
+                            let fileObject = {
+                                name: file.name,
+                                data: e.target.result,
+                                serialNumber: serialNumber,
+                                studentName: studentName,
+                                batchId: batchId,
+                                guide: guide,
+                                title: title
+                            };
+                            uploadedFiles.push(fileObject);
+                            localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                            addFileToTable(fileObject, fileTable);
+                            document.getElementById('fileDetailsForm').reset();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                } else {
+                    alert('Please fill in all fields and select at least one file.');
+                }
+            });
+
+            function addFileToTable(file, table) {
+                let row = table.insertRow();
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                let cell3 = row.insertCell(2);
+                let cell4 = row.insertCell(3);
+                let cell5 = row.insertCell(4);
+                let cell6 = row.insertCell(5);
+                let cell7 = row.insertCell(6);
+
+                cell1.textContent = file.name;
+                cell2.textContent = file.serialNumber;
+                cell3.textContent = file.studentName;
+                cell4.textContent = file.batchId;
+                cell5.textContent = file.guide;
+                cell6.textContent = file.title;
+
+                let viewButton = document.createElement('button');
+                viewButton.textContent = 'View';
+                viewButton.onclick = function() {
+                    viewFile(file);
+                };
+                cell7.appendChild(viewButton);
+
+                if (isAdmin()) {
+                    let deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function() {
+                        deleteFile(file, row);
+                    };
+                    cell7.appendChild(deleteButton);
+                }
+            }
+
+            function viewFile(file) {
+                window.open(file.data);
+            }
+
+            function deleteFile(file, row) {
+                if (confirm('Are you sure you want to delete the file "' + file.name + '"?')) {
+                    let index = uploadedFiles.findIndex(function(f) {
+                        return f.name === file.name;
+                    });
+                    if (index !== -1) {
+                        uploadedFiles.splice(index, 1);
+                        localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                        row.parentNode.removeChild(row);
+                        alert('File deleted successfully!');
+                    }
+                }
+            }
+
+            function isAdmin() {
+                return true;
+            }
+        };
+    </script>
+</body>
+</html>
+    

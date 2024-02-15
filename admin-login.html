@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage">
+        <img src="image.png" alt="Image 1">
+        <img src="another_image.png" alt="Another Image"> <!-- Add another image here -->
+    </div>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li class="dropdown">
+                    <a href="#">Login</a>
+                    <ul class="dropdown-content">
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div id="adminLoginForm" class="login-form">
+        <h2>Admin Login</h2>
+        <form action="admin-dashboard.html" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="admin" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" value="admin_password" required>
+            <button type="submit">Login</button>
+        </form>
+         
+</body>
+</html>

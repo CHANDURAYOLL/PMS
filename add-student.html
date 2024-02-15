@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage">
+        <img src="image.png" alt="Image 1">
+        <img src="another_image.png" alt="Another Image"> <!-- Add another image here -->
+    </div>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li class="dropdown">
+                    <a href="#">Login</a>
+                    <ul class="dropdown-content">
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Services</a>
+                    <ul class="dropdown-content">
+                        <li><a href="add-student.html">Add Student</a></li>
+                        <li><a href="add-project.html">Add Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>Add Student</h2>
+        <form id="studentForm">
+            <div class="form-group">
+                <label for="studentName">Student Name:</label>
+                <input type="text" id="studentName" name="studentName" required>
+            </div>
+            <div class="form-group">
+                <label for="studentUsername">Student Username:</label>
+                <input type="text" id="studentUsername" name="studentUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="studentPassword">Password:</label>
+                <input type="password" id="studentPassword" name="studentPassword" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Action</th> <!-- Add Action column -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Student details will be added here dynamically -->
+        </tbody>
+    </table>
+<script>
+    // Function to render students from local storage to the table
+    function renderStudents() {
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let tableBody = document.querySelector('#studentTable tbody');
+        tableBody.innerHTML = '';
+
+        students.forEach(student => {
+            let row = tableBody.insertRow();
+            row.insertCell().textContent = student.name;
+            row.insertCell().textContent = student.username;
+            row.insertCell().textContent = student.password;
+            let deleteCell = row.insertCell();
+            deleteCell.innerHTML = '<button onclick="deleteStudent(this)">Delete</button>';
+        });
+    }
+
+    // Add student form submission handler
+    document.getElementById('studentForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Get form values
+        let studentName = document.getElementById('studentName').value.trim();
+        let studentUsername = document.getElementById('studentUsername').value.trim();
+        let studentPassword = document.getElementById('studentPassword').value.trim();
+        
+        // Save student to local storage
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        students.push({ name: studentName, username: studentUsername, password: studentPassword });
+        localStorage.setItem('students', JSON.stringify(students));
+
+        // Refresh table
+        renderStudents();
+
+        // Reset form
+        document.getElementById('studentForm').reset();
+    });
+
+    // Function to delete student
+    function deleteStudent(button) {
+        let row = button.closest('tr');
+        let index = row.rowIndex - 1; // Adjust index for header row
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        students.splice(index, 1); // Remove student from array
+        localStorage.setItem('students', JSON.stringify(students));
+        row.remove(); // Remove row from table
+    }
+
+    // Initial rendering of students
+    renderStudents();
+</script>
+
+</body>
+</html>

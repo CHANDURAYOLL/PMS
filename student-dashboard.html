@@ -1,0 +1,131 @@
+<!-- admin-dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="collage">
+        <img src="image.png" alt="Image 1">
+        <img src="another_image.png" alt="Another Image"> <!-- Add another image here -->
+    </div>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li class="dropdown">
+                    <a href="#">Login</a>
+                    <ul class="dropdown-content">
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="student-content">
+    </div>
+    <h1>Student Page</h1>
+    <table id="fileTable">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Serial Number</th>
+                <th>Student Name</th>
+                <th>Batch ID</th>
+                <th>Guide</th>
+                <th>Title</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Uploaded files will be listed here dynamically -->
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+        window.onload = function() {
+            let uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
+            let fileTable = document.getElementById('fileTable').getElementsByTagName('tbody')[0];
+            uploadedFiles.forEach(function(file) {
+                addFileToTable(file, fileTable);
+            });
+        };
+
+        function addFileToTable(file, table) {
+            let row = table.insertRow();
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            let cell4 = row.insertCell(3);
+            let cell5 = row.insertCell(4);
+            let cell6 = row.insertCell(5);
+            let cell7 = row.insertCell(6);
+            
+            cell1.textContent = file.name;
+            cell2.textContent = file.serialNumber;
+            cell3.textContent = file.studentName;
+            cell4.textContent = file.batchId;
+            cell5.textContent = file.guide;
+            cell6.textContent = file.title;
+
+            let viewButton = document.createElement('button');
+            viewButton.textContent = 'View';
+            viewButton.onclick = function() {
+                viewFile(file);
+            };
+            cell7.appendChild(viewButton);
+        }
+
+        function viewFile(file) {
+            // Convert the base64 data to a Blob
+            let binaryData = atob(file.data.split(',')[1]);
+            let arrayBuffer = new ArrayBuffer(binaryData.length);
+            let byteArray = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < binaryData.length; i++) {
+                byteArray[i] = binaryData.charCodeAt(i);
+            }
+            let blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+
+            // Create a Blob URL for the PDF content
+            let blobUrl = URL.createObjectURL(blob);
+
+            // Open the PDF in a new window
+            window.open(blobUrl, '_blank');
+        }
+    </script>   
+     <div class="student-content">
+        <h1>Student Page</h1>
+        <div class="open-ideas">
+            <h2>Open for Ideas</h2>
+            <form id="ideasForm">
+                <label for="idea">Share your idea:</label>
+                <textarea id="idea" name="idea" rows="4" cols="50"></textarea><br>
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email"><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        document.getElementById('ideasForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let ideaText = document.getElementById('idea').value.trim();
+            let email = document.getElementById('email').value.trim();
+
+            let studentIdeas = JSON.parse(localStorage.getItem('studentIdeas')) || [];
+            studentIdeas.push({ idea: ideaText, email: email });
+            localStorage.setItem('studentIdeas', JSON.stringify(studentIdeas));
+
+            document.getElementById('ideasForm').reset();
+            alert('Your idea has been submitted successfully!');
+        });
+    </script>
+</body>
+</html>
